@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "failure_modes_documented": true,
+  "critical_paths_covered_pct": 95.0,
+  "circuit_breakers_configured": true,
+  "timeout_policies_defined": true,
+  "chaos_tests_run": true,
+  "chaos_pass_rate_pct": 92.0,
+  "chaos_test_date": "2026-06-15",
+  "graceful_degradation_tested": true,
+  "fmea_complete": true,
+  "chaos_pass_threshold_pct": 80.0
+}

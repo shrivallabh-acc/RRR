@@ -1,0 +1,5 @@
+{
+  "classification": "within_tolerance",
+  "narrative": "Estimation health is excellent this cycle. The team's planned vs actual variance sits at -1%, well within the ±10% tolerance band that signals reliable forecasting. This narrow variance indicates that story-point estimates were grounded in reality — likely a reflection of mature team velocity data and consistent decomposition practices. There is no evidence of systematic optimism bias (which would show as a persistent positive variance) or padding (which would show as a persistent negative variance). The estimation process is working as intended. A slight underspend (-1%) relative to plan may indicate that a small number of items were easier than expected or were de-scoped without forecast update; this is not actionable but worth noting for future planning calibration.",
+  "risk_factors": []
+}

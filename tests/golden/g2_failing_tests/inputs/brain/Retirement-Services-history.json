@@ -1,0 +1,26 @@
+{
+  "value_stream": "Retirement-Services",
+  "snapshots": [
+    {
+      "date": "2026-05-28",
+      "releases": [
+        {
+          "ir_name": "Launch 37 - Payments Hub",
+          "summary": { "total": 240, "closed": 228, "remaining": 12, "pct": 95.0 },
+          "weekly_last3": [
+            { "week": "2026-05-12", "value": 20 },
+            { "week": "2026-05-19", "value": 22 },
+            { "week": "2026-05-26", "value": 18 }
+          ],
+          "defects_open": { "total": 14, "by_severity": { "blocker": 0, "critical": 1, "major": 6, "minor": 7 } },
+          "defects_closed_cumulative": 60,
+          "defect_trend_last5": [ 6, 8, 10, 12, 14 ],
+          "sq_avg": 1.8,
+          "sq_below_1": [ "repo-payments-core" ],
+          "pv_latest": { "planned": 200, "actual": 198 },
+          "e2e_latest": { "passed": 40, "failed": 120, "planned": 160 }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "value_stream": "Retirement-Services",
+  "snapshots": [
+    {
+      "date": "2026-05-28",
+      "releases": [
+        {
+          "ir_name": "Launch 38 - Advice Workbench",
+          "summary": { "total": 300, "closed": 195, "remaining": 105, "pct": 65.0 },
+          "weekly_last3": [
+            { "week": "2026-05-12", "value": 14 },
+            { "week": "2026-05-19", "value": 12 },
+            { "week": "2026-05-26", "value": 13 }
+          ],
+          "defects_open": { "total": 10, "by_severity": { "blocker": 0, "critical": 0, "major": 4, "minor": 6 } },
+          "defects_closed_cumulative": 48,
+          "defect_trend_last5": [ 9, 9, 8, 9, 9 ],
+          "sq_avg": 2.0,
+          "sq_below_1": [ "repo-advice-rules" ],
+          "pv_latest": { "planned": 200, "actual": 184 },
+          "e2e_latest": { "passed": 130, "failed": 30, "planned": 160 }
+        }
+      ]
+    }
+  ]
+}

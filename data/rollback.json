@@ -1,0 +1,1 @@
+{"schema_version": "1.0.0", "release": null, "captured_at": null, "rollback_plan": "documented", "rollback_tested": true, "rollback_test_date": null, "estimated_rollback_minutes": null, "automated_rollback_available": false, "data_rollback_applicable": false, "data_rollback_plan_exists": null}

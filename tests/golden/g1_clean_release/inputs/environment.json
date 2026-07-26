@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 36 - Unified Onboarding",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "components": [
+    { "name": "API Gateway",      "provisioning": "validated",  "stability": "stable", "notes": "" },
+    { "name": "Auth Service",     "provisioning": "validated",  "stability": "stable", "notes": "" },
+    { "name": "Primary DB",       "provisioning": "configured", "stability": "stable", "notes": "awaiting validation sign-off" },
+    { "name": "Message Queue",    "provisioning": "validated",  "stability": "stable", "notes": "" },
+    { "name": "Observability",    "provisioning": "validated",  "stability": "stable", "notes": "" }
+  ]
+}

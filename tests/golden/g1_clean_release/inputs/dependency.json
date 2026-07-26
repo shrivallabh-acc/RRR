@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 36 - Unified Onboarding",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "dependencies": [
+    { "name": "Payments Service v2",  "completion": "complete", "integration": "passed", "owner": "Payments",  "notes": "" },
+    { "name": "Identity Provider",    "completion": "complete", "integration": "passed", "owner": "Security",  "notes": "" },
+    { "name": "Document Store",       "completion": "complete", "integration": "passed", "owner": "Platform",  "notes": "" },
+    { "name": "Notification Hub",     "completion": "complete", "integration": "passed", "owner": "Platform",  "notes": "" }
+  ]
+}

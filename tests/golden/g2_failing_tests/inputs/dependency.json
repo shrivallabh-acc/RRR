@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 37 - Payments Hub",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "dependencies": [
+    { "name": "Ledger Service",    "completion": "complete", "integration": "passed", "owner": "Payments", "notes": "" },
+    { "name": "Fraud Engine",      "completion": "complete", "integration": "passed", "owner": "Risk",     "notes": "" },
+    { "name": "Identity Provider", "completion": "complete", "integration": "passed", "owner": "Security", "notes": "" }
+  ]
+}

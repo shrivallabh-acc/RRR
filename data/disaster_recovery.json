@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "dr_plan_exists": true,
+  "dr_last_tested_date": "2026-06-01",
+  "rto_target_minutes": 240,
+  "rto_tested_minutes": 185,
+  "rpo_target_minutes": 60,
+  "rpo_tested_minutes": 42,
+  "failover_tested": true,
+  "data_backup_verified": true,
+  "dr_test_max_age_days": 180
+}

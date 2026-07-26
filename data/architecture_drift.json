@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_version": "v1.4.0",
+  "tool": "Backstage",
+  "assessment_date": "2026-07-08",
+  "adr_compliance_pct": 95.0,
+  "banned_technologies_detected": 0,
+  "unapproved_patterns": 0,
+  "tech_standard_violations": 0,
+  "drift_score": 0.05,
+  "approved_deviations": 0,
+  "drift_threshold": 0.20,
+  "adr_compliance_threshold_pct": 80.0
+}

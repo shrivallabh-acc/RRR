@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 38 - Advice Workbench",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "dependencies": [
+    { "name": "Market Data Feed",  "completion": "complete",    "integration": "passed",        "owner": "Data",     "notes": "" },
+    { "name": "Risk Profiler",     "completion": "complete",    "integration": "passed",        "owner": "Risk",     "notes": "" },
+    { "name": "Document Store",    "completion": "complete",    "integration": "passed",        "owner": "Platform", "notes": "" },
+    { "name": "Notification Hub",  "completion": "in_progress", "integration": "not_validated", "owner": "Platform", "notes": "integration testing in progress" }
+  ]
+}

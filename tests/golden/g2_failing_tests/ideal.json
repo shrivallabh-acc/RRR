@@ -1,0 +1,32 @@
+{
+  "_note": "Ground truth for g2_failing_tests — verified against deterministic pipeline output (7-dimension weights, minimum_assessors=4, ADR-0016 item-7 split). Verdict driven by CRITICAL E2E gate (pass rate 25% < 50% floor) capping NO_GO despite strong scope/estimation/dependency. Yellow pipeline adds a MAJOR operability risk factor. Score ~78 (6 dims available, observability not wired, 0.03 weight redistributes).",
+  "sample": "g2_failing_tests",
+  "release": "Launch 37 - Payments Hub",
+  "verdict": "NO_GO",
+  "score": 78,
+  "dimension_scores": {
+    "scope":          { "expected": 0.950, "tolerance": 0.03 },
+    "estimation":     { "expected": 0.990, "tolerance": 0.03 },
+    "environment":    { "expected": 1.000, "tolerance": 0.03 },
+    "test_readiness": { "expected": 0.315, "tolerance": 0.03 },
+    "dependency":     { "expected": 1.000, "tolerance": 0.03 },
+    "operability":    { "expected": 0.760, "tolerance": 0.03 }
+  },
+  "expected_risk_factors": [
+    "E2E pass rate 25% below critical floor 50%",
+    "1 open critical defect(s)",
+    "1 repo(s) below quality 1.0: repo-payments-core",
+    "Deployment pipeline is yellow — intermittent failures",
+    "1 deployment failure(s) in the last 30 days"
+  ],
+  "ideal_remediation": [
+    "Resolve the E2E test failures — pass rate must reach the 50% critical floor before launch.",
+    "Close or risk-accept the 1 open critical defect.",
+    "Bring repo-payments-core quality score above 1.0 before go-live.",
+    "Stabilise the deployment pipeline before launch — yellow status indicates intermittent build failures."
+  ],
+  "gates_triggered": [
+    "E2E pass rate 25% below critical floor 50%",
+    "1 open critical defect(s)"
+  ]
+}

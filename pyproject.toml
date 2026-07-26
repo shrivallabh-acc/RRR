@@ -1,0 +1,98 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rrr"
+version = "0.1.0"
+description = "Release Readiness Results — auditable, local-first GO/NO-GO release verdicts"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "RRR Team" }]
+
+# Phase-1 runtime dependencies. Local-first: nothing here requires a network at runtime.
+# Versions are lower bounds pending a lockfile decision (see docs/roadmap.md open questions).
+dependencies = [
+  "pydantic>=2.6",
+  "click>=8.1",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Optional on-machine LLM path (Ollama / llama.cpp on 127.0.0.1). Not required to run.
+# LocalLLMProvider uses stdlib urllib — no SDK needed. This group adds the Ollama SDK if desired.
+local-llm = ["ollama>=0.3"]
+# LangGraph orchestration wrapper — deferred per ADR-0002; ThreadPoolExecutor is the current engine.
+graph = ["langgraph>=0.2"]
+# Chroma vector memory + RAG (FR-24, M4). Deferred: native-build risk on Python 3.14.
+rag = ["chromadb>=0.5"]
+# Jinja2 output templates (M2 — readiness plans, checklists). Not yet built.
+templates = ["jinja2>=3.1"]
+# Amazon Bedrock provider (Phase 2, ADR-0019). External network calls to AWS.
+bedrock = ["boto3>=1.35"]
+# Phase-2 external scale-out only — NOT installed for local-first Phase 1.
+cloud = ["anthropic>=0.40"]
+# NiceGUI web dashboard (ADR-0020). Runs on 127.0.0.1 — local-first, no external calls.
+ui = ["nicegui>=2.0"]
+dev = [
+  "pytest>=8.0",
+  "pytest-xdist>=3.0",
+  "hypothesis>=6.100",
+  "ruff>=0.5",
+  "mypy>=1.10",
+  "types-PyYAML>=6.0",
+]
+
+[project.scripts]
+rrr = "rrr.cli:main"
+rrr-ingest = "rrr.ingest.cli:ingest"
+rrr-ui = "rrr.ui._cli:ui_main"
+rrr-collect = "rrr.collectors._cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rrr"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# NiceGUI's context-manager hierarchy requires nested `with` statements.
+# Combining them (SIM117) would change the UI tree structure and break rendering.
+"src/rrr/ui/**" = ["SIM117"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+# nicegui is an optional dep (pip install rrr[ui]) — stubs are not available.
+module = ["nicegui", "nicegui.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# @ui.page() is an untyped decorator from nicegui — strict untyped-decorator
+# checking would require nicegui stubs which don't exist yet.
+module = "rrr.ui.app"
+disallow_untyped_decorators = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "unit: fast unit tests — run on every commit (default gate)",
+  "golden: golden-fixture end-to-end tests — run before every commit",
+  "property: Hypothesis property tests — run at the quality gate (HYPOTHESIS_PROFILE=full)",
+  "eval: LLM evaluation harness — run at milestone breaks only",
+  "slow: any test that consistently takes > 1 second",
+]
+filterwarnings = [
+  # chromadb uses a deprecated asyncio API — suppress until chromadb ships a fix.
+  "ignore::DeprecationWarning:chromadb",
+]

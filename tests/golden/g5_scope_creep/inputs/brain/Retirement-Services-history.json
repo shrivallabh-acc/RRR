@@ -1,0 +1,47 @@
+{
+  "value_stream": "Retirement-Services",
+  "snapshots": [
+    {
+      "date": "2026-05-14",
+      "releases": [
+        {
+          "ir_name": "Launch 40 - Onboarding Plus",
+          "summary": { "total": 200, "closed": 120, "remaining": 80, "pct": 60.0 },
+          "weekly_last3": [
+            { "week": "2026-04-28", "value": 22 },
+            { "week": "2026-05-05", "value": 24 },
+            { "week": "2026-05-12", "value": 21 }
+          ],
+          "defects_open": { "total": 8, "by_severity": { "blocker": 0, "critical": 0, "major": 3, "minor": 5 } },
+          "defects_closed_cumulative": 40,
+          "defect_trend_last5": [ 10, 9, 8, 7, 6 ],
+          "sq_avg": 2.5,
+          "sq_below_1": [],
+          "pv_latest": { "planned": 150, "actual": 132 },
+          "e2e_latest": { "passed": 110, "failed": 8, "planned": 130 }
+        }
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "releases": [
+        {
+          "ir_name": "Launch 40 - Onboarding Plus",
+          "summary": { "total": 260, "closed": 245, "remaining": 15, "pct": 94.2 },
+          "weekly_last3": [
+            { "week": "2026-05-12", "value": 21 },
+            { "week": "2026-05-19", "value": 26 },
+            { "week": "2026-05-26", "value": 30 }
+          ],
+          "defects_open": { "total": 5, "by_severity": { "blocker": 0, "critical": 0, "major": 2, "minor": 3 } },
+          "defects_closed_cumulative": 70,
+          "defect_trend_last5": [ 10, 8, 6, 5, 4 ],
+          "sq_avg": 2.6,
+          "sq_below_1": [],
+          "pv_latest": { "planned": 200, "actual": 160 },
+          "e2e_latest": { "passed": 150, "failed": 8, "planned": 160 }
+        }
+      ]
+    }
+  ]
+}

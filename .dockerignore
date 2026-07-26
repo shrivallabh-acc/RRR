@@ -1,0 +1,57 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Git
+.git/
+.gitignore
+
+# Tests (not needed in production image)
+tests/
+.pytest_cache/
+.hypothesis/
+coverage.xml
+.coverage
+htmlcov/
+
+# Development tooling
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.sw[po]
+
+# Docs and diagrams (not needed in runtime image)
+docs/
+diagrams/
+adr/
+
+# Local data (mounted via volumes at runtime)
+brain/
+data/
+
+# CI / deployment configs (not needed inside image)
+.github/
+.pre-commit-config.yaml
+
+# Scripts (useful at dev time; not needed in image)
+scripts/
+
+# Secrets and local overrides
+.env
+*.env.local
+secrets/

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "wcag_target_level": "AA",
+  "scan_tool": "axe",
+  "pages_scanned": 42,
+  "critical_violations": 0,
+  "major_violations": 0,
+  "minor_violations": 3,
+  "manual_review_complete": true,
+  "manual_review_passed": true
+}

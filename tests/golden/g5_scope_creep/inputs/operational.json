@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 40 - Onboarding Plus",
+  "deployment_pipeline": "yellow",
+  "rollback_plan": "none",
+  "change_freeze": false,
+  "recent_deployment_failures": 2,
+  "deployment_duration_minutes": 35
+}

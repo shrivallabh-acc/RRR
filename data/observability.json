@@ -1,0 +1,1 @@
+{"schema_version": "1.0.0", "release": null, "captured_at": null, "dashboards_configured": true, "dashboards_count": 3, "slo_defined": true, "slo_alerts_configured": true, "alert_coverage_pct": 80.0, "trace_coverage_pct": 70.0, "log_coverage_pct": 90.0, "runbooks_linked_to_alerts_pct": 75.0, "monitoring_tool": null}

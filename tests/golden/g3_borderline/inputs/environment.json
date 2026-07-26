@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 38 - Advice Workbench",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "components": [
+    { "name": "API Gateway",    "provisioning": "validated",   "stability": "stable", "notes": "" },
+    { "name": "Auth Service",   "provisioning": "configured",  "stability": "stable", "notes": "validation pending" },
+    { "name": "Primary DB",     "provisioning": "provisioned", "stability": "stable", "notes": "not yet configured" },
+    { "name": "Advice Engine",  "provisioning": "configured",  "stability": "stable", "notes": "" },
+    { "name": "Observability",  "provisioning": "validated",   "stability": "stable", "notes": "" }
+  ]
+}

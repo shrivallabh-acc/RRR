@@ -1,0 +1,41 @@
+# Pre-commit hooks for RRR — enforces the quality gate before every commit.
+# Run manually (no git required): .venv/Scripts/pre-commit run --all-files
+# Wire to git on first init:       git init && .venv/Scripts/pre-commit install
+#
+# Mirrors the CI gate in .github/workflows/ci.yml so local and remote checks
+# are identical (ruff check + format + mypy --strict + comment coverage).
+
+repos:
+  - repo: local
+    hooks:
+      - id: comment-coverage
+        name: Comment coverage (check_comments.py)
+        language: python
+        entry: python scripts/check_comments.py
+        args: [src/rrr]
+        pass_filenames: false
+        types: [python]
+
+      - id: ruff-check
+        name: Lint (ruff check)
+        language: python
+        entry: ruff
+        args: [check, src, tests]
+        pass_filenames: false
+        types: [python]
+
+      - id: ruff-format
+        name: Format (ruff format --check)
+        language: python
+        entry: ruff
+        args: [format, --check, src, tests]
+        pass_filenames: false
+        types: [python]
+
+      - id: mypy
+        name: Type-check (mypy --strict)
+        language: python
+        entry: python -m mypy
+        args: [src]
+        pass_filenames: false
+        types: [python]

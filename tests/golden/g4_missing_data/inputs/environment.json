@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 39 - Statements Redesign",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "components": [
+    { "name": "API Gateway",   "provisioning": "validated", "stability": "stable", "notes": "" },
+    { "name": "Auth Service",  "provisioning": "validated", "stability": "stable", "notes": "" },
+    { "name": "Render Service","provisioning": "configured","stability": "stable", "notes": "" }
+  ]
+}

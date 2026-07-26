@@ -1,0 +1,29 @@
+{
+  "_note": "Ground truth for g5_scope_creep — verified against deterministic pipeline output (7-dimension weights, minimum_assessors=4, ADR-0016 item-7 split). Score ~93 would be GO but capped to CONDITIONAL by MAJOR gate on 30% scope creep. Yellow pipeline adds a MAJOR operability risk factor. Rollback concern moves to opt-in RollbackAssessor (not wired in this fixture).",
+  "sample": "g5_scope_creep",
+  "release": "Launch 40 - Onboarding Plus",
+  "verdict": "CONDITIONAL",
+  "score": 93,
+  "dimension_scores": {
+    "scope":          { "expected": 0.942, "tolerance": 0.03 },
+    "estimation":     { "expected": 0.800, "tolerance": 0.03 },
+    "environment":    { "expected": 1.000, "tolerance": 0.03 },
+    "test_readiness": { "expected": 0.928, "tolerance": 0.03 },
+    "dependency":     { "expected": 1.000, "tolerance": 0.03 },
+    "operability":    { "expected": 0.760, "tolerance": 0.03 }
+  },
+  "expected_risk_factors": [
+    "Planned scope grew 30.0% across snapshots (> 10% threshold)",
+    "Estimation over-estimated: variance -20.0% exceeds ±10%",
+    "Deployment pipeline is yellow — intermittent failures",
+    "2 deployment failure(s) in the last 30 days"
+  ],
+  "ideal_remediation": [
+    "Conduct a scope-change review: document what was added (+30%) and obtain stakeholder sign-off before launch.",
+    "Review estimation accuracy — actual SP consumption -20% below plan suggests future planning needs recalibration.",
+    "Stabilise the deployment pipeline and document a rollback plan before launch."
+  ],
+  "gates_triggered": [
+    "Planned scope grew 30.0% across snapshots (> 10% threshold)"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "value_stream": "Retirement-Services",
+  "snapshots": [
+    {
+      "date": "2026-05-21",
+      "releases": [
+        {
+          "ir_name": "Launch 36 - Unified Onboarding",
+          "summary": { "total": 240, "closed": 205, "remaining": 35, "pct": 85.4 },
+          "weekly_last3": [
+            { "week": "2026-05-05", "value": 16 },
+            { "week": "2026-05-12", "value": 19 },
+            { "week": "2026-05-19", "value": 21 }
+          ],
+          "defects_open": { "total": 9, "by_severity": { "blocker": 0, "critical": 1, "major": 3, "minor": 5 } },
+          "defects_closed_cumulative": 71,
+          "defect_trend_last5": [ 12, 11, 9, 8, 7 ],
+          "sq_avg": 2.5,
+          "sq_below_1": [],
+          "pv_latest": { "planned": 210, "actual": 201 },
+          "e2e_latest": { "passed": 150, "failed": 6, "planned": 160 }
+        }
+      ]
+    },
+    {
+      "date": "2026-05-28",
+      "releases": [
+        {
+          "ir_name": "Launch 36 - Unified Onboarding",
+          "summary": { "total": 240, "closed": 230, "remaining": 10, "pct": 95.8 },
+          "weekly_last3": [
+            { "week": "2026-05-12", "value": 19 },
+            { "week": "2026-05-19", "value": 21 },
+            { "week": "2026-05-26", "value": 25 }
+          ],
+          "defects_open": { "total": 5, "by_severity": { "blocker": 0, "critical": 0, "major": 2, "minor": 3 } },
+          "defects_closed_cumulative": 94,
+          "defect_trend_last5": [ 11, 9, 8, 6, 4 ],
+          "sq_avg": 2.7,
+          "sq_below_1": [],
+          "pv_latest": { "planned": 200, "actual": 198 },
+          "e2e_latest": { "passed": 156, "failed": 4, "planned": 160 }
+        }
+      ]
+    }
+  ]
+}

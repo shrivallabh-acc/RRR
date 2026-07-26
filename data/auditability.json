@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "audit_logging_enabled": true,
+  "regulated_events_logged": true,
+  "audit_log_immutability_guaranteed": true,
+  "data_retention_days": 2555,
+  "gdpr_logging_compliant": true,
+  "pii_access_logged": true,
+  "audit_trail_tested": true
+}

@@ -1,0 +1,90 @@
+# Pre-Release Action Plan — {{ o.release }}
+
+**Value stream:** {{ o.value_stream or "—" }}
+**Generated:** {{ o.generated_at.strftime("%Y-%m-%d %H:%M UTC") }}
+**Verdict:** {{ o.verdict.value }}  ·  **Score:** {{ o.score }}/100{% if o.aggregate_confidence is not none %}  ·  **Confidence:** {{ "%.0f%%"|format(o.aggregate_confidence * 100) }}{% endif %}
+
+{% if o.verdict.value == "GO" %}
+> ✅ Release is cleared. Review recommendations below and monitor post-release.
+{% elif o.verdict.value == "CONDITIONAL" %}
+> ⚠️ Release is **CONDITIONAL**. Resolve all Required items and re-assess before proceeding.
+{% elif o.verdict.value == "NO_GO" %}
+> 🔴 Release is **BLOCKED**. All Blockers must be resolved before a GO verdict is possible.
+{% else %}
+> ⚫ Assessment is **INCOMPLETE** — one or more dimensions could not be scored. Re-run after resolving unavailable dimensions.
+{% endif %}
+
+---
+{% if blockers %}
+
+## 🔴 Blockers — Must resolve before GO
+
+_These items triggered a NO_GO gate or represent critical release risk. The release cannot proceed until all are resolved._
+
+{% for r in blockers %}
+- [ ] **{{ r.description }}**{% if r.gate %} *(gate: {{ r.gate }})*{% endif %}
+
+{% endfor %}
+{% endif %}
+{% if required %}
+
+## 🟡 Required — Needed for GO confidence
+
+_MAJOR risks that will prevent a high-confidence GO verdict. Resolve before re-assessing._
+
+{% for r in required %}
+- [ ] {{ r.description }}{% if r.gate %} *(gate: {{ r.gate }})*{% endif %}
+
+{% endfor %}
+{% endif %}
+{% if recommended %}
+
+## 🟢 Recommended — Address before release
+
+_MINOR risks. Will not block GO but should be tracked._
+
+{% for r in recommended %}
+- [ ] {{ r.description }}
+
+{% endfor %}
+{% endif %}
+{% if o.remediation %}
+
+---
+
+## Remediation Steps
+
+_LLM-generated action items. Review and assign as appropriate._
+
+{% for step in o.remediation %}
+- [ ] {{ step }}
+{% endfor %}
+{% endif %}
+{% if unavailable %}
+
+---
+
+## Dimensions Requiring Re-Assessment
+
+_The following dimensions could not be scored this run. A GO verdict requires all required dimensions to be available._
+
+| Dimension | Reason |
+|-----------|--------|
+{% for d in unavailable %}
+| {{ d.dimension.value|replace("_", " ")|title }} | {{ d.narrative or "Tool error — check logs" }} |
+{% endfor %}
+{% endif %}
+{% if o.audit_trail.gates_triggered %}
+
+---
+
+## Gates Triggered
+
+{% for gate in o.audit_trail.gates_triggered %}
+- `{{ gate }}`
+{% endfor %}
+{% endif %}
+
+---
+
+_Re-run `rrr --release "{{ o.release }}" --format plan` after completing blockers to confirm verdict change._

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RRR — {{ o.release }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <style>
+    body { padding: 2rem; background: #f8f9fa; }
+    .rrr-card { border-radius: .5rem; }
+    .score-bar .progress { height: 1.5rem; border-radius: .75rem; }
+    .score-bar .progress-bar { font-size: 1rem; font-weight: 600; }
+    .dim-available   { color: #198754; }
+    .dim-unavailable { color: #dc3545; }
+    .badge-no_go { background-color: #dc3545 !important; }
+  </style>
+</head>
+<body>
+<div class="container-xl">
+
+  <!-- Header -->
+  <div class="card rrr-card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <h1 class="h3 mb-1">{{ o.release }}</h1>
+          <small class="text-muted">
+            {% if o.value_stream %}Value stream: <strong>{{ o.value_stream }}</strong> &nbsp;·&nbsp; {% endif %}
+            Generated: {{ o.generated_at.strftime("%Y-%m-%d %H:%M UTC") }}
+            &nbsp;·&nbsp; Schema: {{ o.schema_version }}
+          </small>
+        </div>
+        <span class="badge bg-{{ badge_class }} fs-5 px-3 py-2">{{ o.verdict.value }}</span>
+      </div>
+
+      <!-- Score bar -->
+      <div class="score-bar mt-3">
+        <div class="d-flex justify-content-between mb-1">
+          <span class="fw-semibold">Overall Score</span>
+          <span class="fw-bold">{{ o.score }}/100
+            {% if o.aggregate_confidence is not none %}
+              &nbsp;<small class="text-muted">(confidence {{ "%.0f%%"|format(o.aggregate_confidence * 100) }})</small>
+            {% endif %}
+          </span>
+        </div>
+        <div class="progress">
+          <div class="progress-bar bg-{{ badge_class }}"
+               role="progressbar"
+               style="width: {{ o.score }}%"
+               aria-valuenow="{{ o.score }}"
+               aria-valuemin="0"
+               aria-valuemax="100">
+            {{ o.score }}%
+          </div>
+        </div>
+      </div>
+
+      {% if o.rationale %}
+      <p class="mt-3 mb-0 text-secondary fst-italic">{{ o.rationale }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Dimension table -->
+  <div class="card rrr-card shadow-sm mb-4">
+    <div class="card-header fw-semibold">Dimension Summary</div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Dimension</th>
+            <th class="text-end">Score</th>
+            <th>Classification</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in o.dimensions %}
+          <tr>
+            <td>{{ d.dimension.value | replace("_", " ") | title }}</td>
+            <td class="text-end fw-semibold">{{ "%.0f%%"|format(d.score * 100) }}</td>
+            <td><code>{{ d.classification or "—" }}</code></td>
+            <td>
+              {% if d.available %}
+                <span class="dim-available">✓ Available</span>
+              {% else %}
+                <span class="dim-unavailable">⚠ Unavailable</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Risk factors -->
+  {% if blockers or required or recommended %}
+  <div class="card rrr-card shadow-sm mb-4">
+    <div class="card-header fw-semibold">Risk Factors</div>
+    <div class="card-body">
+      {% if blockers %}
+      <h6 class="text-danger">🚫 Blockers (CRITICAL)</h6>
+      <ul class="mb-3">
+        {% for r in blockers %}
+        <li>{{ r.description }}{% if r.gate %} <span class="badge bg-danger ms-1">gate: {{ r.gate }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if required %}
+      <h6 class="text-warning">⚠ Required (MAJOR)</h6>
+      <ul class="mb-3">
+        {% for r in required %}
+        <li>{{ r.description }}{% if r.gate %} <span class="badge bg-warning text-dark ms-1">gate: {{ r.gate }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if recommended %}
+      <h6 class="text-info">ℹ Recommended (MINOR)</h6>
+      <ul class="mb-0">
+        {% for r in recommended %}
+        <li>{{ r.description }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Remediation -->
+  {% if o.remediation %}
+  <div class="card rrr-card shadow-sm mb-4">
+    <div class="card-header fw-semibold">Remediation Steps</div>
+    <ol class="list-group list-group-flush list-group-numbered">
+      {% for step in o.remediation %}
+      <li class="list-group-item">{{ step }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <!-- Trends -->
+  {% if o.trend_data %}
+  <div class="card rrr-card shadow-sm mb-4">
+    <div class="card-header fw-semibold">Trends vs Previous Assessment</div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Dimension</th>
+            <th class="text-end">Previous</th>
+            <th class="text-end">Current</th>
+            <th>Direction</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in o.trend_data %}
+          <tr>
+            <td>{{ t.dimension.value | replace("_", " ") | title }}</td>
+            <td class="text-end">{{ "%.0f%%"|format((t.previous_score or 0) * 100) }}</td>
+            <td class="text-end fw-semibold">{{ "%.0f%%"|format(t.current_score * 100) }}</td>
+            <td>{{ t.direction.value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Audit trail -->
+  <div class="card rrr-card shadow-sm mb-4 text-muted small">
+    <div class="card-header fw-semibold text-dark">Audit Trail</div>
+    <div class="card-body">
+      <p class="mb-1"><strong>Provider:</strong> {{ o.audit_trail.provider }}{% if o.audit_trail.model %} / {{ o.audit_trail.model }}{% endif %}</p>
+      {% if o.audit_trail.gates_triggered %}
+      <p class="mb-1"><strong>Gates triggered:</strong> {{ o.audit_trail.gates_triggered | join(", ") }}</p>
+      {% endif %}
+      {% if o.audit_trail.effective_weights %}
+      <p class="mb-1"><strong>Effective weights:</strong>
+        {% for dim, w in o.audit_trail.effective_weights.items() %}{{ dim.value }} {{ "%.0f%%"|format(w * 100) }}{% if not loop.last %}, {% endif %}{% endfor %}
+      </p>
+      {% endif %}
+      {% for note in o.audit_trail.notes %}
+      <p class="mb-1">{{ note }}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

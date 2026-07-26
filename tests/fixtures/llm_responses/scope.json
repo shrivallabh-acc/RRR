@@ -1,0 +1,12 @@
+{
+  "classification": "delivered",
+  "narrative": "Scope delivery for this release is strong. The team has closed 95.8% of planned story points, comfortably above the 90% DELIVERED threshold. The completion trajectory across sprint snapshots shows consistent burn-down without late-sprint scope additions that would indicate hidden commitments. The remaining 4.2% of open items are non-blocking enhancements that the team has explicitly agreed to carry forward — this is a deliberate and documented choice, not slippage. The RKT brain snapshot history shows no scope-creep signals (no snapshot-to-snapshot growth above the 20% threshold). Overall, scope risk for this release is low and the delivery story is coherent.",
+  "risk_factors": [
+    {
+      "description": "3-5% of planned story points are deferred to next sprint; while intentional, cumulative deferrals across multiple releases can indicate systemic estimation pressure.",
+      "severity": "minor",
+      "dimension": "scope",
+      "gate": null
+    }
+  ]
+}

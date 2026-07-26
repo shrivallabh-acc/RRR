@@ -1,0 +1,27 @@
+{
+  "_note": "Ground truth for g3_borderline — verified against deterministic pipeline output (7-dimension weights, minimum_assessors=4, ADR-0016 item-7 split). Verdict capped by MAJOR gate on unvalidated Notification Hub dependency. Scope only 65% complete. Pipeline green, runbook complete — no operability risks. Score ~74 (6 dims available, observability not wired).",
+  "sample": "g3_borderline",
+  "release": "Launch 38 - Advice Workbench",
+  "verdict": "CONDITIONAL",
+  "score": 74,
+  "dimension_scores": {
+    "scope":          { "expected": 0.650, "tolerance": 0.03 },
+    "estimation":     { "expected": 0.920, "tolerance": 0.03 },
+    "environment":    { "expected": 0.800, "tolerance": 0.03 },
+    "test_readiness": { "expected": 0.660, "tolerance": 0.03 },
+    "dependency":     { "expected": 0.750, "tolerance": 0.03 },
+    "operability":    { "expected": 1.000, "tolerance": 0.03 }
+  },
+  "expected_risk_factors": [
+    "Notification Hub in progress, integration not validated",
+    "1 repo(s) below quality 1.0: repo-advice-rules"
+  ],
+  "ideal_remediation": [
+    "Complete and validate Notification Hub integration before launch; hold or partial-ship without dependent features.",
+    "Resolve remaining scope — 105 of 300 story points open; consider a partial release or deferral plan.",
+    "Bring repo-advice-rules quality score above 1.0."
+  ],
+  "gates_triggered": [
+    "Notification Hub in progress, integration not validated"
+  ]
+}

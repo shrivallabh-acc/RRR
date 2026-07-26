@@ -1,0 +1,17 @@
+{
+  "_note": "Ground truth for g1_clean_release — verified against deterministic pipeline output (7-dimension weights, minimum_assessors=4, ADR-0016 item-7 split). Latest snapshot (2026-05-28) has 0 critical defects; env 'configured' status does not trigger a risk factor (only DOWN/DEGRADED/MISSING do). Pipeline green, runbook complete, on-call active — no operability risks emitted.",
+  "sample": "g1_clean_release",
+  "release": "Launch 36 - Unified Onboarding",
+  "verdict": "GO",
+  "score": 97,
+  "dimension_scores": {
+    "scope":          { "expected": 0.958, "tolerance": 0.03 },
+    "estimation":     { "expected": 0.990, "tolerance": 0.03 },
+    "environment":    { "expected": 0.950, "tolerance": 0.03 },
+    "dependency":     { "expected": 1.000, "tolerance": 0.03 },
+    "test_readiness": { "expected": 0.953, "tolerance": 0.03 },
+    "operability":    { "expected": 1.000, "tolerance": 0.03 }
+  },
+  "expected_risk_factors": [],
+  "ideal_remediation": []
+}

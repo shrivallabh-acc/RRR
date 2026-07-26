@@ -1,0 +1,67 @@
+---
+# RRR local-first deployment.
+#
+# Services:
+#   rrr     — the CLI container; brain data + DB volumes are mounted from the host.
+#   ollama  — optional local LLM sidecar (disabled by default; uncomment to enable).
+#
+# Quick start (rule-based provider, no model needed):
+#   docker compose run --rm rrr rrr --release "my-release"
+#
+# With MockLLM demo:
+#   docker compose run --rm rrr rrr --release "Launch 36 - Unified Onboarding" \
+#     --config /app/configs/demo.yaml
+#
+# With Ollama local LLM:
+#   docker compose --profile local-llm up -d ollama
+#   docker compose run --rm rrr rrr --release "my-release" \
+#     --config /app/configs/local_llm.yaml
+
+version: "3.9"
+
+services:
+  rrr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: "3.11"
+    image: rrr:latest
+    volumes:
+      - brain_data:/data/brain       # RKT brain extract snapshots
+      - rrr_db:/data/local           # SQLite + Chroma persistence
+      # Mount your local brain data: uncomment and set the host path
+      # - ./brain:/data/brain
+    environment:
+      # RRR reads config from /app/configs/default or --config flag.
+      # Override individual values via environment (ConfigLoader merges env → yaml).
+      RRR_LOG_LEVEL: "INFO"
+    networks:
+      - rrr_net
+
+  # Optional Ollama sidecar (Phase 1 local-first LLM).
+  # Enable with: docker compose --profile local-llm up -d ollama
+  ollama:
+    image: ollama/ollama:latest
+    profiles:
+      - local-llm
+    ports:
+      - "11434:11434"              # RRR config: provider.local_llm.endpoint = http://ollama:11434
+    volumes:
+      - ollama_models:/root/.ollama
+    networks:
+      - rrr_net
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  rrr_net:
+    driver: bridge
+
+volumes:
+  brain_data:
+  rrr_db:
+  ollama_models:

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "release": null,
+  "captured_at": null,
+  "sast_status": "passed",
+  "dast_status": "not_run",
+  "open_critical_cves": 0,
+  "open_high_cves": 0,
+  "license_approved": true,
+  "data_privacy_approved": null,
+  "pen_test_passed": null
+}

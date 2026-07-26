@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "sca_tool": "Snyk",
+  "sca_scan_date": "2026-07-08",
+  "eol_dependencies_count": 0,
+  "critical_transitive_cves": 0,
+  "high_transitive_cves": 3,
+  "supply_chain_violations": 0,
+  "pinned_dependencies_pct": 98.5,
+  "known_malicious_packages": 0,
+  "high_transitive_cve_threshold": 10
+}

@@ -1,0 +1,20 @@
+{
+  "_note": "Ground truth for g4_missing_data — verified against deterministic pipeline output (7-dimension weights, minimum_assessors=4, ADR-0016 item-7 split). No brain directory → Scope, Estimation, TestReadiness all unavailable. Only 3 dimensions succeed (Environment + Dependency + Operability) which is below minimum_assessors (4) → INCOMPLETE regardless of their scores. Score is computed from available dims but the verdict label is the key assertion.",
+  "sample": "g4_missing_data",
+  "release": "Launch 39 - Missing Data",
+  "verdict": "INCOMPLETE",
+  "score": 96,
+  "available_dimensions": ["environment", "dependency", "operability"],
+  "unavailable_dimensions": ["scope", "estimation", "test_readiness"],
+  "dimension_scores": {
+    "environment":    { "expected": 0.917, "tolerance": 0.03 },
+    "dependency":     { "expected": 1.000, "tolerance": 0.03 },
+    "operability":    { "expected": 1.000, "tolerance": 0.03 }
+  },
+  "expected_risk_factors": [],
+  "ideal_remediation": [
+    "Provide the RKT brain export (brain/*.json) for Retirement-Services before re-running the assessment.",
+    "Without brain data, Scope, Estimation, and Test Readiness cannot be evaluated — a release decision cannot be made."
+  ],
+  "gates_triggered": []
+}

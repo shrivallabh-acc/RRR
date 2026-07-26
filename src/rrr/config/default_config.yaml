@@ -1,0 +1,205 @@
+# RRR default configuration (Phase 1 — local-first).
+# Loaded by ConfigLoader, merged with user overrides, then validated by Pydantic (FR-15).
+# Values are sourced from docs/requirements.md (FR/NFR). Items marked TODO are open questions.
+
+schema_version: "1.0.0"
+
+# --- Dimension weights (must sum to 1.0) ---------------------------------------------------
+# Quality & delivery weighted (ADR-0011, ADR-0016): test quality is the primary release gate;
+# estimation is a program-predictability signal.
+# ADR-0016 item 7 split: Operational (0.10) → Operability (0.07) + Observability (0.03).
+# Observability is opt-in; when absent its 0.03 redistributes across available dims (ADR-0005).
+weights:
+  test_readiness: 0.27
+  scope: 0.23
+  environment: 0.18
+  dependency: 0.13
+  estimation: 0.09
+  operability: 0.07
+  observability: 0.03
+
+# --- Verdict thresholds (FR-8, ADR-0015) --------------------------------------------------
+thresholds:
+  go: 0.80          # score >= 0.80  -> GO
+  no_go: 0.40       # score <  0.40  -> NO_GO ; between -> CONDITIONAL
+  minimum_assessors: 4   # fewer successful dimensions -> INCOMPLETE (NFR-2); 4 of 7 required
+  # ADR-0015: these dims must be available for GO; if absent, verdict is capped to CONDITIONAL.
+  required_dimensions: [test_readiness, environment]
+  # ADR-0015: aggregate confidence (mean across available dims) below this -> GO caps to CONDITIONAL.
+  confidence_floor: 0.70
+
+# --- Trend deltas vs previous assessment (FR-9) --------------------------------------------
+trend:
+  improving_delta: 0.05    # Δ >  0.05 -> improving
+  degrading_delta: -0.05   # Δ < -0.05 -> degrading ; else stable
+
+# --- Verdict veto/cap gates (ADR-0013) -----------------------------------------------------
+# A triggered gate ceilings the verdict regardless of the weighted score; final verdict =
+# most restrictive of the score band and all triggered caps (GO > CONDITIONAL > NO_GO).
+gates:
+  enabled: true
+  e2e_critical_floor: 0.50          # E2E pass rate below this -> NO_GO
+  blocker_defects: NO_GO            # any open blocker defect -> NO_GO
+  critical_defects_limit: 0         # open critical defects above this -> CONDITIONAL
+  environment_down: NO_GO           # any component stability=down -> NO_GO
+  environment_degraded: CONDITIONAL # any degraded stability or missing provisioning -> CONDITIONAL
+  dependency_failed: NO_GO          # any dependency integration=failed -> NO_GO
+  dependency_blocking: CONDITIONAL  # any not_started/at_risk dependency -> CONDITIONAL
+  scope_creep_threshold: 0.10       # planned-SP growth across snapshots > 10% -> CONDITIONAL
+
+# --- Timeouts in seconds (NFR-1) -----------------------------------------------------------
+timeouts:
+  assessor_default: 300
+  environment_source: 60   # NFR-1 environment assessor
+  external_source: 10      # FR-3 environment data source fetch
+  tool_default: 30         # FR-11
+
+# --- Persistence retry (FR-14) -------------------------------------------------------------
+persistence:
+  retry_attempts: 3
+  retry_interval_seconds: 5
+
+# --- Tool invocation retry (NFR-1, W6) ----------------------------------------------------
+# Retries transient ToolInvocationError; ToolTimeoutError is never retried.
+tools:
+  retry_count: 1        # extra attempts on ToolInvocationError (0 = no retry)
+  retry_backoff_s: 0.5  # seconds to wait between attempts
+
+# --- LLM provider (ADR-0006, FR-30) --------------------------------------------------------
+provider:
+  type: rule_based         # rule_based (default) | local_llm | bedrock (Phase 2) | claude (Phase 2)
+  repair_retries: 1        # FR-23: one repair retry before falling back to rule_based
+
+  # --- TIERED PROVIDER POLICY (cost + performance guidance) ------------------
+  # Use the right provider for each use-case tier to control LLM token cost:
+  #
+  #   AUTOMATED / BATCH runs (CI pipelines, rrr-collect, Trends chart):
+  #     type: rule_based    ← zero token cost, deterministic, ~0.5s per assessment
+  #
+  #   INTERACTIVE / DEVELOPER runs (rrr CLI, ad-hoc dashboard assessments):
+  #     type: local_llm     ← on-machine Ollama, zero API cost, richer narrative
+  #
+  #   EXECUTIVE / GOVERNANCE reports (weekly programme dashboard, CAB submissions):
+  #     type: claude        ← highest narrative quality; restrict to ≤ N runs/day
+  #     type: bedrock       ← same quality, AWS data-residency for regulated clients
+  #
+  # A single ClaudeProvider assessment costs ~$0.27 (8 assessors × claude-opus-4-8).
+  # 100 assessments/day = ~$6,750/year. Default rule_based = $0.
+  # ---------------------------------------------------------------------------
+
+  # local_llm:             # opt-in, on-machine only (127.0.0.1)
+  #   endpoint: "http://127.0.0.1:11434"
+  #   model: "llama3.1"
+  # bedrock:               # Phase 2 — Amazon Bedrock Converse API (ADR-0019)
+  #   model_id: "anthropic.claude-3-5-sonnet-20241022-v2:0"
+  #   region: "us-east-1"
+  #   max_tokens: 1024
+  #   temperature: 0.1
+  # claude:                # Phase 2 external scale-out ONLY — requires Anthropic API key
+  #   model: "claude-opus-4-8"
+
+# --- Data sources (local-first; non-local endpoints rejected unless allowlisted) -----------
+sources:
+  # Brain = normalized RKT extract read by RKTBrainReader (ADR-0012, docs/brain-schema.md).
+  # One file per value stream: <dir>/<value_stream>-history.json, with weekly snapshots.
+  brain:
+    dir: "./brain"
+    value_stream: "Retirement-Services"   # selects "<value_stream>-history.json"
+    snapshot: "latest"                     # "latest" | an ISO date "YYYY-MM-DD"
+  # Environment & Dependency contracts: docs/env-dep-schema.md (FR-3 / FR-5).
+  # Format inferred from extension (.json/.csv); or type: api with a localhost url.
+  environment:  { type: file, path: "./data/environment.json" }   # EnvironmentTool
+  dependency:   { type: file, path: "./data/dependency.json" }    # DependencyTool
+  operability:  { type: file, path: "./data/operability.json" }   # OperabilityTool (ADR-0016 item 7)
+  # Observability is opt-in (weighted 0.03) — uncomment to enable ObservabilityAssessor:
+  # observability: { type: file, path: "./data/observability.json" }
+  # Rollback is opt-in (gate-only) — uncomment to enable RollbackAssessor:
+  # rollback:   { type: file, path: "./data/rollback.json" }
+  # Security dimension is opt-in (gate-only) — uncomment to enable SecurityComplianceAssessor:
+  # security:   { type: file, path: "./data/security.json" }
+  # Performance dimension is opt-in (gate-only) — uncomment to enable PerformanceAssessor:
+  # performance: { type: file, path: "./data/performance.json" }
+  # ADR-0016 items 8-16: gate-only assessors, all opt-in — uncomment to enable:
+  # accessibility:         { type: file, path: "./data/accessibility.json" }
+  # auditability:          { type: file, path: "./data/auditability.json" }
+  # disaster_recovery:     { type: file, path: "./data/disaster_recovery.json" }
+  # data_reconciliation:   { type: file, path: "./data/data_reconciliation.json" }
+  # failure_mode:          { type: file, path: "./data/failure_mode.json" }
+  # dependency_risk:       { type: file, path: "./data/dependency_risk.json" }
+  # production_readiness:  { type: file, path: "./data/production_readiness.json" }
+  # architecture_fitness:  { type: file, path: "./data/architecture_fitness.json" }
+  # architecture_drift:    { type: file, path: "./data/architecture_drift.json" }
+  # API form (optional, must be allow-listed, 10s timeout):
+  #   environment: { type: api, url: "http://127.0.0.1:8001/environment" }
+  allowed_hosts: ["127.0.0.1", "localhost"]   # NFR-8 / ADR-0010
+
+# --- Assessor-specific (FR-4) --------------------------------------------------------------
+assessors:
+  test_readiness:
+    suite_pass_threshold: 0.80   # flag suites below this (default 80%)
+    weights: { quality: 0.4, defect_trend: 0.3, e2e_pass_rate: 0.3 }
+    # When e2e_latest is absent, drop E2E and renormalize quality/defect to sum 1.0
+    # (0.4/0.3 -> 0.571/0.429) with reduced confidence (ADR-0012).
+    e2e_absent: renormalize
+    # Warn (MINOR risk) when brain snapshot is older than this many days; 0 disables.
+    freshness_max_age_days: 30
+  security:
+    # High-severity CVE count that triggers a MAJOR risk (CONDITIONAL cap).
+    # Below this threshold high CVEs are noted but not verdict-capping.
+    high_cve_threshold: 5
+
+# --- Value-stream alias registry (optional) ------------------------------------------------
+# Enables the Trends-tab category filter (Direct / Dependency / Supporting / Other).
+# If omitted, the filter is hidden and all releases are shown in a flat list.
+#
+# value_stream:
+#   canonical: "OSM"              # programme code in brain data
+#   aliases:                      # all names used across releases and tools
+#     - "OSM"
+#     - "OS&M"
+#     - "Offer Selection & Management"
+#   related_programmes:           # supporting system codes to include in the Supporting category
+#     - "AIMS"
+#     - "EIMS"
+#     - "PIMS"
+
+# --- Release risk tiers (ADR-0016 items 4-5) -----------------------------------------------
+# Each tier overrides the global thresholds block for --tier hotfix|standard|major.
+# required_gate_dims: dims that must be available for GO (overrides global required_dimensions).
+# excluded_gate_dims: gate-only dims whose risk factors are suppressed for this tier.
+tiers:
+  hotfix:
+    go: 0.60            # relaxed — hotfixes are often scoped/partial
+    no_go: 0.30
+    confidence_floor: 0.60
+    required_gate_dims: [test_readiness]
+    excluded_gate_dims: []   # no exclusions by default; add e.g. performance when applicable
+  standard:
+    go: 0.80            # mirrors the global thresholds block default
+    no_go: 0.40
+    confidence_floor: 0.70
+    required_gate_dims: [test_readiness, environment]
+    excluded_gate_dims: []
+  major:
+    go: 0.90            # strict — large releases must clear a higher bar
+    no_go: 0.60
+    confidence_floor: 0.80
+    required_gate_dims: [test_readiness, environment, dependency]
+    excluded_gate_dims: []
+
+# --- Web dashboard authentication (ADR-0020, T-02) -----------------------------------------
+# Set both auth_user and auth_password to protect rrr-ui with HTTP Basic Auth.
+# Leave both null (or omit this block) for local-only unauthenticated access.
+# Use ${VAR} interpolation (T-04) to inject the password from an env variable:
+#
+# ui:
+#   auth_user: "admin"
+#   auth_password: "${RRR_UI_PASSWORD}"
+
+# --- Memory / RAG (FR-24, ADR-0003, ADR-0007) ----------------------------------------------
+memory:
+  sqlite_path: "./data/local/rrr.sqlite"
+  # chroma_path: null disables the RAG vector index entirely (ADR-0007 — deferrable).
+  # Set to a directory path (e.g. "./data/local/chroma") to enable Chroma persistence.
+  chroma_path: null
+  rag_top_k: 3

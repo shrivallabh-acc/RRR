@@ -1,0 +1,82 @@
+# Release Readiness Report — {{ o.release }}
+
+**Value stream:** {{ o.value_stream or "—" }}
+**Generated:** {{ o.generated_at.strftime("%Y-%m-%d %H:%M UTC") }}
+**Schema:** {{ o.schema_version }}
+{% if o.tier is not none %}**Tier:** {{ o.tier.value | upper }}{% endif %}
+
+---
+
+## Verdict: {{ o.verdict.value }}  ·  Score: {{ o.score }}/100{% if o.aggregate_confidence is not none %}  ·  Confidence: {{ "%.0f%%"|format(o.aggregate_confidence * 100) }}{% endif %}
+
+{% if o.ship_safety_score is not none or o.delivery_performance_score is not none %}
+| | Score |
+|---|---:|
+{% if o.ship_safety_score is not none %}| Ship Safety | {{ o.ship_safety_score }}/100 |
+{% endif %}{% if o.delivery_performance_score is not none %}| Delivery Performance | {{ o.delivery_performance_score }}/100 |
+{% endif %}
+{% endif %}
+
+{% if o.rationale %}
+{{ o.rationale }}
+
+{% endif %}
+---
+
+## Dimension Summary
+
+| Dimension | Score | Class | Status |
+|-----------|------:|-------|--------|
+{% for d in o.dimensions %}
+| {{ d.dimension.value|replace("_", " ")|title }} | {{ "%.0f%%"|format(d.score * 100) }} | {{ d.classification or "—" }} | {{ "✅ Available" if d.available else "⚠️ Unavailable" }} |
+{% endfor %}
+
+{% if o.risk_factors %}
+---
+
+## Risk Factors
+
+{% for r in o.risk_factors %}
+- **{{ r.severity.value }}** — {{ r.description }}{% if r.gate %} *(gate: {{ r.gate }})*{% endif %}
+
+{% endfor %}
+{% endif %}
+{% if o.remediation %}
+---
+
+## Remediation
+
+{% for step in o.remediation %}
+{{ loop.index }}. {{ step }}
+{% endfor %}
+{% endif %}
+{% if o.trend_data %}
+---
+
+## Trends vs Previous Assessment
+
+| Dimension | Previous | Current | Direction |
+|-----------|--------:|--------:|-----------|
+{% for t in o.trend_data %}
+| {{ t.dimension.value|replace("_", " ")|title }} | {{ "%.0f%%"|format((t.previous_score or 0) * 100) }} | {{ "%.0f%%"|format(t.current_score * 100) }} | {{ t.direction.value }} |
+{% endfor %}
+{% endif %}
+
+---
+
+## Audit Trail
+
+- **Provider:** {{ o.audit_trail.provider }}{% if o.audit_trail.model %} / {{ o.audit_trail.model }}{% endif %}
+
+{% if o.audit_trail.gates_triggered %}
+- **Gates triggered:** {{ o.audit_trail.gates_triggered | join(", ") }}
+{% endif %}
+{% if o.audit_trail.effective_weights %}
+- **Effective weights:** {% for dim, w in o.audit_trail.effective_weights.items() %}{{ dim.value }} {{ "%.0f%%"|format(w * 100) }}{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endif %}
+{% if o.audit_trail.notes %}
+{% for note in o.audit_trail.notes %}
+- {{ note }}
+{% endfor %}
+{% endif %}

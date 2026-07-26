@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "release": "Launch 40 - Onboarding Plus",
+  "captured_at": "2026-05-28T10:00:00.000Z",
+  "components": [
+    { "name": "API Gateway",   "provisioning": "validated", "stability": "stable", "notes": "" },
+    { "name": "Auth Service",  "provisioning": "validated", "stability": "stable", "notes": "" },
+    { "name": "Primary DB",    "provisioning": "validated", "stability": "stable", "notes": "" },
+    { "name": "Message Queue", "provisioning": "validated", "stability": "stable", "notes": "" }
+  ]
+}

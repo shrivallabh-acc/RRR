@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "capacity_confirmed": true,
+  "feature_flags_configured": true,
+  "go_live_checklist_complete": true,
+  "stakeholder_sign_offs": {
+    "product": true,
+    "engineering": true,
+    "security": true,
+    "operations": true
+  },
+  "release_comms_prepared": true,
+  "support_team_briefed": true,
+  "rollback_decision_criteria_defined": true,
+  "post_release_monitoring_plan": true
+}

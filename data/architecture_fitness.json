@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "tool": "ArchUnit",
+  "scan_date": "2026-07-08",
+  "fitness_functions_defined": 24,
+  "tests_run": 24,
+  "tests_passed": 24,
+  "tests_failed": 0,
+  "coupling_violations": 0,
+  "layering_violations": 0,
+  "banned_dependency_violations": 0,
+  "violations": []
+}

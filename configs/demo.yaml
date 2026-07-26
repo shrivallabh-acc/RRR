@@ -1,0 +1,82 @@
+# Demo configuration — uses MockLLMProvider to showcase AI-first reasoning offline.
+#
+# Run: rrr --release "Launch 36 - Unified Onboarding" --config configs/demo.yaml
+#
+# Demonstrates the full pipeline end-to-end with LLM-style narrative and remediation
+# without requiring Ollama or any running model. Reads fixture responses from
+# tests/fixtures/llm_responses/ and passes them through the full parse_with_repair
+# guardrail chain exactly as production would.
+
+schema_version: "1.0.0"
+
+weights:
+  test_readiness: 0.30
+  scope: 0.25
+  environment: 0.20
+  dependency: 0.15
+  estimation: 0.10
+
+thresholds:
+  go: 0.80
+  no_go: 0.40
+  minimum_assessors: 3
+  required_dimensions: [test_readiness, environment]
+  confidence_floor: 0.70
+
+trend:
+  improving_delta: 0.05
+  degrading_delta: -0.05
+
+gates:
+  enabled: true
+  e2e_critical_floor: 0.50
+  blocker_defects: NO_GO
+  critical_defects_limit: 0
+  environment_down: NO_GO
+  environment_degraded: CONDITIONAL
+  dependency_failed: NO_GO
+  dependency_blocking: CONDITIONAL
+  scope_creep_threshold: 0.10
+
+timeouts:
+  assessor_default: 300
+  environment_source: 60
+  external_source: 10
+  tool_default: 30
+
+persistence:
+  retry_attempts: 3
+  retry_interval_seconds: 5
+
+tools:
+  retry_count: 1
+  retry_backoff_s: 0.5
+
+# MockLLMProvider: pre-authored fixture responses, full guardrail chain, no model needed.
+provider:
+  type: mock_llm
+  repair_retries: 1
+  mock_llm:
+    fixture_dir: "tests/fixtures/llm_responses"
+
+# Data sources — point at the g1_clean_release golden fixture for a clean demo run.
+sources:
+  brain:
+    dir: "tests/golden/g1_clean_release/inputs/brain"
+    value_stream: "Retirement-Services"
+    snapshot: "latest"
+  environment: { type: file, path: "tests/golden/g1_clean_release/inputs/environment.json" }
+  dependency: { type: file, path: "tests/golden/g1_clean_release/inputs/dependency.json" }
+  allowed_hosts: ["127.0.0.1", "localhost"]
+
+assessors:
+  test_readiness:
+    suite_pass_threshold: 0.80
+    weights: { quality: 0.4, defect_trend: 0.3, e2e_pass_rate: 0.3 }
+    e2e_absent: renormalize
+    freshness_max_age_days: 30
+
+memory:
+  sqlite_path: "./data/local/demo.sqlite"
+  chroma_path: null
+  rag_top_k: 3

@@ -1,0 +1,12 @@
+{
+  "classification": "suite_passing",
+  "narrative": "Test readiness is solid across all three dimensions of this composite score. Quality indicators (pass rates, defect severity mix) are healthy, with no open blocker or critical defects remaining in the build. The defect trend is flat-to-improving, indicating the team has been actively closing issues rather than accumulating them. The E2E suite is covering the release scope and the executed pass rate is high. The composite score of 0.95 reflects a small number of non-critical defects still open — these are tracked, documented, and accepted by the release manager as known risks that do not block deployment. Overall, the test estate gives confidence that the release is functionally sound. The team's defect management discipline is evident in the clean critical/blocker category.",
+  "risk_factors": [
+    {
+      "description": "A small number of non-critical defects remain open; ensure each has an accepted-risk or deferred-to-next-release record before GO is formally declared.",
+      "severity": "minor",
+      "dimension": "test_readiness",
+      "gate": null
+    }
+  ]
+}
