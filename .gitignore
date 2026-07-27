@@ -36,3 +36,17 @@ pytest_out.txt
 # Secrets — never commit (Phase 2 ClaudeProvider only)
 .env
 *.key
+
+# Client data — keep local, never commit to any remote
+input/
+brain/
+reports/
+configs/osm.yaml
+configs/bedrock.yaml
+configs/claude.yaml
+
+# AI assistant workspace config — local tooling only
+.claude/
+
+# CI/CD pipeline — excluded until explicitly re-enabled
+.github/
