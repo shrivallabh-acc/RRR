@@ -17,6 +17,7 @@ from rrr.tools.source_reader import (
     DEFAULT_ALLOWED_HOSTS,
     DependencySourceReader,
     EnvironmentSourceReader,
+    OperabilitySourceReader,
     OperationalSourceReader,
 )
 
@@ -88,7 +89,7 @@ def test_stub_data_files_are_loadable() -> None:
     data = Path("data")
     env = EnvironmentSourceReader(path=data / "environment.json").invoke()
     dep = DependencySourceReader(path=data / "dependency.json").invoke()
-    ops = OperationalSourceReader(path=data / "operational.json").invoke()
+    ops = OperabilitySourceReader(path=data / "operability.json").invoke()
     assert env.components
     assert dep.dependencies
     assert ops.deployment_pipeline is not None

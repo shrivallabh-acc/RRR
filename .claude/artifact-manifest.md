@@ -36,7 +36,7 @@ must be verified on every EOD run.
 | `docs/evaluation-plan.md` | Eval approach, golden dataset structure, acceptance thresholds | Status of eval harness and oracles | Says "not yet implemented" after eval is done |
 | `docs/brain-schema.md` | Brain input contract — stable | No implementation status claims | Out-of-date field names vs actual `brain/*.json` |
 | `docs/env-dep-schema.md` | Env/dep source schemas — stable | No implementation status claims | — |
-| `docs/claude-code-prompt-devex.md` | Claude Code dev-ex guidance — stable reference | No status claims | — |
+| `.claude/devex-notes.md` | Claude Code dev-ex guidance — stable reference | No status claims | — |
 
 ---
 
@@ -102,7 +102,7 @@ Run after every EOD artifact sync to confirm green before closing.
 
 | Variable | Current value | Last verified |
 |----------|---------------|---------------|
-| Test count | **727** | 2026-07-10 (alignment script — hardening bundle 13 + Collect screen 6 new tests; 727 test functions) |
+| Test count | **766** | 2026-07-26 (alignment script — adapters batch 1 + cleanup; 766 test functions) |
 | ADR count | **23** (0001–0023) | 2026-07-10 (no new ADRs; impl-notes added to ADR-0020 + ADR-0023) |
 | Diagram count | **9** (01–09) | 2026-06-26 |
 | M1 status | ✅ Complete | 2026-06-15 |
@@ -119,4 +119,4 @@ Run after every EOD artifact sync to confirm green before closing.
 | ADR-0020 | Accepted — impl-note 2026-07-10 (M7 Phase 2 Collect screen) | 2026-07-10 |
 | ADR-0021 | Accepted — implemented 2026-06-28 | 2026-06-29 |
 | ADR-0022 | Accepted — implemented 2026-06-29 | 2026-06-29 |
-| ▶ Next action | M7 Phase 2 Collect screen ✅ + T-02/T-03/T-04/T-07 ✅ 2026-07-10 (727 tests). Next: M7 Phase 2 remaining — tool adapters (snyk, sonarqube, k6, axe, grafana, datadog) or `docs/data-collection-guide.md`. | 2026-07-10 EOD |
+| ▶ Next action | M7 adapters batch 1 (K6/Snyk/SonarQube) ✅ 2026-07-16; codebase cleanup + comprehensive docs ✅ 2026-07-26 (766 tests). Next: M7 adapters batch 2 — axe, lighthouse (accessibility), grafana, datadog (observability + performance), github_actions (operability). | 2026-07-27 |

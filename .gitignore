@@ -29,6 +29,10 @@ data/local/
 .idea/
 .vscode/
 
+# Captured test/tool output — transient, never committed
+pytest_err.txt
+pytest_out.txt
+
 # Secrets — never commit (Phase 2 ClaudeProvider only)
 .env
 *.key
